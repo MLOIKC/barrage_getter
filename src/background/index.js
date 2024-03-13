@@ -1,12 +1,5 @@
 console.log('background is running')
 
-chrome.runtime.onMessage.addListener((request) => {
-  if (request.type === 'COUNT') {
-    console.log('background has received a message from popup, and count is ', request?.count)
-  }
-})
-
-
 // 监听弹幕信息
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'danmuData') {
@@ -49,6 +42,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'danmuFullData') {
     // 在需要发送数据的地方，将数据打包成一个对象
     const danmuFullData = {
+      bvid: message.bvid,
       contents: message.contents,
       times: message.times,
       modes: message.modes,
