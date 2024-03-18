@@ -32,7 +32,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       body: JSON.stringify(danmuData),
     })
       .then(response => response.text())
-      .then(data => console.log(data))
+      .then(data => {
+        console.log(data)
+        // 发送消息到前端
+        chrome.runtime.sendMessage({ type: 'fetchDanmu', data: data });
+      })
       .catch(error => console.error('Error:', error));
   }
 });
@@ -65,7 +69,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       body: JSON.stringify(danmuFullData),
     })
       .then(response => response.text())
-      .then(data => console.log(data))
+      .then(data => {
+        console.log(data)
+        // 发送消息到前端
+        chrome.runtime.sendMessage({ type: 'fetchDanmu', data: data });
+      })
       .catch(error => console.error('Error:', error));
   }
 });

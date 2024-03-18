@@ -3,15 +3,20 @@
         <el-button color="#42b983" type="primary" plain @click="SentiAnalysis">进行情感分析</el-button>
         <!-- 显示情感分析结果 -->
         <div v-if="sentimentResult">
-            <h3>情感分析结果</h3>
+            <h4>情感分析结果</h4>
             <p>{{ sentimentResult }}</p>
         </div>
     </div>
 </template>
 
 <script setup lang="js">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ElButton } from 'element-plus';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const danmuDetail = computed(() => store.state.danmuDetail);
 
 const sentimentResult = ref('');
 
@@ -22,7 +27,12 @@ const SentiAnalysis = () => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+            danmuDetail: {
+                type: danmuDetail.value.type,
+                data: danmuDetail.value.data
+            }
+        }),
     })
         .then(response => response.json())
         .then(data => {
@@ -35,4 +45,15 @@ const SentiAnalysis = () => {
 }
 
 </script>
+
+<style>
+h4 {
+    color: #42b983;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    font-weight: 200;
+    line-height: 1.2rem;
+    margin: 2rem auto;
+}
+</style>
   

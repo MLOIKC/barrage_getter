@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName" class="danmutabs">
+  <el-tabs v-model="activeName" class="danmutabs" @tab-click="handleTabClick">
     <el-tab-pane label="初级版" name="first">
       <el-button color="#42b983" type="primary" plain @click="getDanmuData">获取弹幕列表信息</el-button>
     </el-tab-pane>
@@ -62,12 +62,22 @@
       </div>
     </el-tab-pane>
   </el-tabs>
+  <div>
+    <el-alert v-if="isSuccess === true" :title="successMessage" type="success" center :closable="false" show-icon
+      style="margin-top: 10px;" />
+    <el-alert v-else-if="isSuccess === false" :title="successMessage" type="error" center :closable="false" show-icon
+      style="margin-top: 10px;" />
+  </div>
 </template>
 
 <script setup lang="js">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 // 导入 Element UI 的按钮组件
 import { ElButton } from 'element-plus';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const danmuDetail = computed(() => store.state.danmuDetail);
 
 const activeName = ref('first')
 const iframeCode = ref("");
@@ -78,7 +88,32 @@ const comments = ref("");
 const inputCode = ref("");
 const responseData = ref(null);
 
-// 执行获取弹幕信息并发送的逻辑
+const successMessage = ref('');
+const isSuccess = ref(null);
+
+// 监听来自 background.js 的消息
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'fetchDanmu') {
+    // 解析消息内容并提取成功信息
+    const data = JSON.parse(message.data);
+    if (data) {
+      if (data.message) {
+        successMessage.value = data.message;
+        isSuccess.value = true;
+      }
+      else {
+        successMessage.value = data.error;
+        isSuccess.value = false;
+      }
+    }
+  }
+});
+
+const handleTabClick = (tab) => {
+  isSuccess.value = null;
+}
+
+// 初级版获取弹幕
 const getDanmuData = () => {
   // 查询当前活动标签页
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -185,11 +220,18 @@ const getDanmuData = () => {
 
         // 向 Background Script 发送弹幕数据
         chrome.runtime.sendMessage({ type: 'danmuData', titledata: danmuTitle, timedata: danmuTimes, contentdata: danmuContents, datedata: danmuDates });
+
+        let danmuDetailSample = {
+          type: 'Beg', // 设置默认值
+          data: danmuTitle, // 设置默认值
+        };
+        chrome.runtime.sendMessage({ type: danmuDetailSample.type, data: danmuDetailSample });
       },
     });
   });
 };
 
+// 中级版获取弹幕
 const getCidBvid = () => {
   const regex_cid = /cid=(\d+)/;
   const match_cid = iframeCode.value.match(regex_cid);
@@ -202,7 +244,9 @@ const getCidBvid = () => {
     console.log("Extracted Cid:", match_cid[1]);
 
     extractedBvid.value = match_bvid[1];
-    console.log("Extracted Cid:", match_bvid[1]);
+    console.log("Extracted Bvid:", match_bvid[1]);
+
+    store.commit('setDanmuDetail', { type: 'Int', data: extractedBvid.value });
 
     // 根据提取到的 cid 获取评论内容
     fetchComments(match_cid[1], match_bvid[1]);
@@ -276,6 +320,7 @@ const fetchComments = async (cid, bvid) => {
   }
 };
 
+// 高级版获取弹幕
 const getAidCidBvid = () => {
   const regex_aid = /aid=(\d+)/;
   const match_aid = inputCode.value.match(regex_aid);
@@ -296,6 +341,7 @@ const getAidCidBvid = () => {
     extractedBvid.value = match_bvid[1];
     console.log("Extracted Bvid:", match_bvid[1]);
 
+    store.commit('setDanmuDetail', { type: 'Adv', data: extractedBvid.value });
     // 根据提取到的 cid 获取评论内容
     fetchData(match_aid[1], match_cid[1], match_bvid[1]);
   } else {
@@ -321,7 +367,22 @@ const fetchData = async (aid, cid, bvid) => {
       body: formData,
     })
       .then(response => response.text())
-      .then(data => console.log(data))
+      .then(message => {
+        console.log(message)
+        // 发送消息到前端
+        // 解析消息内容并提取成功信息
+        const data = JSON.parse(message);
+        if (data) {
+          if (data.message) {
+            successMessage.value = data.message;
+            isSuccess.value = true;
+          }
+          else {
+            successMessage.value = data.error;
+            isSuccess.value = false;
+          }
+        }
+      })
       .catch(error => console.error('Error:', error));
 
   } catch (error) {

@@ -23,6 +23,11 @@ const routes = [
     name: 'SentiAnalysis',
     component: () => import('../components/SentimentAnalysis.vue'),
   },
+  {
+    path: '/themeanalysis',
+    name: 'ThemeAnalysis',
+    component: () => import('../components/ThemeAnalysis.vue'),
+  },
 ];
 
 const router = createRouter({

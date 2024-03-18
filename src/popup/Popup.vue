@@ -2,7 +2,7 @@
   <main>
     <div class="common-layout">
       <el-container>
-        <el-aside width="160px">
+        <el-aside width="165px">
           <NarbarMenu />
         </el-aside>
         <el-container>
@@ -63,7 +63,7 @@ onMounted(() => {
 }
 
 body {
-  min-width: 30rem;
+  min-width: 33rem;
   color-scheme: light dark;
 }
 
