@@ -24,10 +24,10 @@
             </el-alert>
             <el-menu-item index="2-1" @click="navigateToSentiAnalysis">弹幕情感分析</el-menu-item>
             <el-menu-item index="2-2" @click="navigateToThemeAnalysis">弹幕主题分析</el-menu-item>
-            <el-menu-item index="2-3" @click="navigateToKeywordsThemeAnalysis">弹幕关键词提取</el-menu-item>
-            <el-menu-item index="2-4">弹幕时间密度</el-menu-item>
+            <el-menu-item index="2-3" @click="navigateToKeywordsAnalysis">弹幕关键词提取</el-menu-item>
+            <el-menu-item index="2-4" @click="navigateToTimeAnalysis">弹幕时间密度</el-menu-item>
             <el-menu-item index="2-5">弹幕色彩分析</el-menu-item>
-            <el-menu-item index="2-6">弹幕发布时间统计</el-menu-item>
+            <el-menu-item index="2-6" @click="navigateToDateAnalysis">弹幕发布时间统计</el-menu-item>
 
         </el-sub-menu>
         <el-menu-item index="3">
@@ -82,13 +82,33 @@ const navigateToThemeAnalysis = () => {
         showAlert.value = false;
     }
 };
-const navigateToKeywordsThemeAnalysis = () => {
+const navigateToKeywordsAnalysis = () => {
     if (!danmuDetail.value.type) {
         // 如果 danmuDetail 为空，提醒用户
         showAlert.value = true;
     } else {
         // 如果不为空，进行页面跳转
         router.push('/keywordsanalysis');
+        showAlert.value = false;
+    }
+};
+const navigateToTimeAnalysis = () => {
+    if (!danmuDetail.value.type) {
+        // 如果 danmuDetail 为空，提醒用户
+        showAlert.value = true;
+    } else {
+        // 如果不为空，进行页面跳转
+        router.push('/timeanalysis');
+        showAlert.value = false;
+    }
+};
+const navigateToDateAnalysis = () => {
+    if (!danmuDetail.value.type) {
+        // 如果 danmuDetail 为空，提醒用户
+        showAlert.value = true;
+    } else {
+        // 如果不为空，进行页面跳转
+        router.push('/dateanalysis');
         showAlert.value = false;
     }
 };

@@ -33,6 +33,16 @@ const routes = [
     name: 'keywordsAnalysis',
     component: () => import('../components/keywordsAnalysis.vue'),
   },
+  {
+    path: '/timeanalysis',
+    name: 'timeAnalysis',
+    component: () => import('../components/TimeAnalysis.vue'),
+  },
+  {
+    path: '/dateanalysis',
+    name: 'dateAnalysis',
+    component: () => import('../components/DateAnalysis.vue'),
+  },
 ];
 
 const router = createRouter({

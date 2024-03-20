@@ -1,9 +1,15 @@
 <template>
     <main>
         <h4>欢迎使用</h4>
+        <div>
+            <!-- <TimeChart /> -->
+        </div>
     </main>
 </template>
 
+<script setup>
+import TimeChart from './charts/timeChart.vue';
+</script>
 <style>
 main {
     text-align: center;
@@ -19,5 +25,4 @@ h4 {
     line-height: 1.2rem;
     margin: 2rem auto;
 }
-
 </style>
