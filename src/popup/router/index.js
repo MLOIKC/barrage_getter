@@ -28,6 +28,11 @@ const routes = [
     name: 'ThemeAnalysis',
     component: () => import('../components/ThemeAnalysis.vue'),
   },
+  {
+    path: '/keywordsanalysis',
+    name: 'keywordsAnalysis',
+    component: () => import('../components/keywordsAnalysis.vue'),
+  },
 ];
 
 const router = createRouter({

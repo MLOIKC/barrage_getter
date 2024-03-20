@@ -24,7 +24,7 @@
             </el-alert>
             <el-menu-item index="2-1" @click="navigateToSentiAnalysis">弹幕情感分析</el-menu-item>
             <el-menu-item index="2-2" @click="navigateToThemeAnalysis">弹幕主题分析</el-menu-item>
-            <el-menu-item index="2-3">弹幕关键词提取</el-menu-item>
+            <el-menu-item index="2-3" @click="navigateToKeywordsThemeAnalysis">弹幕关键词提取</el-menu-item>
             <el-menu-item index="2-4">弹幕时间密度</el-menu-item>
             <el-menu-item index="2-5">弹幕色彩分析</el-menu-item>
             <el-menu-item index="2-6">弹幕发布时间统计</el-menu-item>
@@ -79,6 +79,16 @@ const navigateToThemeAnalysis = () => {
     } else {
         // 如果不为空，进行页面跳转
         router.push('/themeanalysis');
+        showAlert.value = false;
+    }
+};
+const navigateToKeywordsThemeAnalysis = () => {
+    if (!danmuDetail.value.type) {
+        // 如果 danmuDetail 为空，提醒用户
+        showAlert.value = true;
+    } else {
+        // 如果不为空，进行页面跳转
+        router.push('/keywordsanalysis');
         showAlert.value = false;
     }
 };
