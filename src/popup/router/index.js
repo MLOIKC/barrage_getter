@@ -43,6 +43,11 @@ const routes = [
     name: 'dateAnalysis',
     component: () => import('../components/DateAnalysis.vue'),
   },
+  {
+    path: '/coloranalysis',
+    name: 'colorAnalysis',
+    component: () => import('../components/ColorAnalysis.vue'),
+  },
 ];
 
 const router = createRouter({

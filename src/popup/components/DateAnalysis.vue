@@ -75,7 +75,6 @@ const DateAnalysis = () => {
     })
         .then(response => response.json())
         .then(data => {
-            // 获取情感分析结果并更新到前端页面
             dateResult.value = convertDatesToTimestamps(data);
 
         })

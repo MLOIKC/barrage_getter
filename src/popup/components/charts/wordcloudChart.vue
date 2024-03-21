@@ -5,9 +5,6 @@
     <div id="wordCloudtooltip"
         style="position: absolute; visibility: hidden; padding: 5px; background: rgba(255, 255, 255, 0.85);border-radius: 8px;">
     </div>
-    <div>
-        wordData:{{ props.wordData }}
-    </div>
 </template>
   
 <script setup>

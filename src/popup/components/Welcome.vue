@@ -1,14 +1,14 @@
 <template>
     <main>
         <h4>欢迎使用</h4>
-        <div>
-            <!-- <TimeChart /> -->
-        </div>
+        <!-- <div>
+            <ColorPieChart />
+        </div> -->
     </main>
 </template>
 
 <script setup>
-import TimeChart from './charts/timeChart.vue';
+import ColorPieChart from './charts/colorPieChart.vue';
 </script>
 <style>
 main {

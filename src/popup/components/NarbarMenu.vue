@@ -22,11 +22,13 @@
             </template>
             <el-alert v-if="showAlert" title="请先获取弹幕数据！" type="warning" :closable="false" show-icon>
             </el-alert>
+            <el-alert v-if="showColorAlert" title="初级版不支持色彩分析！" type="warning" :closable="false" show-icon>
+            </el-alert>
             <el-menu-item index="2-1" @click="navigateToSentiAnalysis">弹幕情感分析</el-menu-item>
             <el-menu-item index="2-2" @click="navigateToThemeAnalysis">弹幕主题分析</el-menu-item>
             <el-menu-item index="2-3" @click="navigateToKeywordsAnalysis">弹幕关键词提取</el-menu-item>
             <el-menu-item index="2-4" @click="navigateToTimeAnalysis">弹幕时间密度</el-menu-item>
-            <el-menu-item index="2-5">弹幕色彩分析</el-menu-item>
+            <el-menu-item index="2-5" @click="navigateToColorAnalysis">弹幕色彩分析</el-menu-item>
             <el-menu-item index="2-6" @click="navigateToDateAnalysis">弹幕发布时间统计</el-menu-item>
 
         </el-sub-menu>
@@ -55,6 +57,7 @@ const router = useRouter();
 
 const danmuDetail = computed(() => store.state.danmuDetail);
 const showAlert = ref(false); // 控制警告显示的变量
+const showColorAlert = ref(false);
 
 const navigateToWelcome = () => {
     router.push('/welcome');
@@ -70,6 +73,7 @@ const navigateToSentiAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/sentiAnalysis');
         showAlert.value = false;
+        showColorAlert.value = false;
     }
 };
 const navigateToThemeAnalysis = () => {
@@ -80,6 +84,7 @@ const navigateToThemeAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/themeanalysis');
         showAlert.value = false;
+        showColorAlert.value = false;
     }
 };
 const navigateToKeywordsAnalysis = () => {
@@ -90,6 +95,7 @@ const navigateToKeywordsAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/keywordsanalysis');
         showAlert.value = false;
+        showColorAlert.value = false;
     }
 };
 const navigateToTimeAnalysis = () => {
@@ -100,6 +106,7 @@ const navigateToTimeAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/timeanalysis');
         showAlert.value = false;
+        showColorAlert.value = false;
     }
 };
 const navigateToDateAnalysis = () => {
@@ -110,6 +117,23 @@ const navigateToDateAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/dateanalysis');
         showAlert.value = false;
+        showColorAlert.value = false;
+    }
+};
+const navigateToColorAnalysis = () => {
+    if (!danmuDetail.value.type) {
+        // 如果 danmuDetail 为空，提醒用户
+        showAlert.value = true;
+    } else {
+        // 如果不为空
+        if (danmuDetail.value.type == 'Beg') {
+            showColorAlert.value = true;
+        }
+        else {
+            router.push('/coloranalysis');
+            showAlert.value = false;
+            showColorAlert.value = false;
+        }
     }
 };
 </script>

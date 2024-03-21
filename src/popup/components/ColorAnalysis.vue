@@ -1,7 +1,7 @@
 <template>
     <div>
-        <el-button color="#42b983" type="primary" plain @click="TimeAnalysis">生成时间密度图</el-button>
-        <TimeChart :timeData="timeResult"/>
+        <el-button color="#42b983" type="primary" plain @click="ColorAnalysis">生成弹幕颜色</el-button>
+        <ColorPieChart :colorData="colorResult"/>
     </div>
 </template>
 
@@ -9,18 +9,18 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ElButton } from 'element-plus';
 import { useStore } from 'vuex';
-import TimeChart from './charts/timeChart.vue';
+import ColorPieChart from './charts/colorPieChart.vue';
 
 const store = useStore();
 
 const danmuDetail = computed(() => store.state.danmuDetail);
 
-const timeResult = ref('');
+const colorResult = ref('');
 
 
-const TimeAnalysis = () => {
+const ColorAnalysis = () => {
     // 发送POST请求给Flask后端
-    fetch('http://localhost:5000/analyze_time', {
+    fetch('http://localhost:5000/analyze_color', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ const TimeAnalysis = () => {
     })
         .then(response => response.json())
         .then(data => {
-            timeResult.value = data;
+            colorResult.value = data;
             
         })
         .catch(error => {

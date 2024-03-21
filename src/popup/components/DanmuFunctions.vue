@@ -9,15 +9,7 @@
         <el-text class="mx-1">请点击视频下方分享视频中的嵌入代码然后将剪切板中的内容复制到此处:</el-text>
         <el-input v-model="iframeCode" placeholder="Enter iframe code" />
         <el-button color="#42b983" type="primary" plain @click="getCidBvid">获取详细弹幕信息</el-button>
-        <div>
-          <label>Extracted Cid:</label>
-          <div>{{ extractedCid }}</div>
-        </div>
-        <div>
-          <label>Extracted Bvid:</label>
-          <div>{{ extractedBvid }}</div>
-        </div>
-        <div v-if="comments && comments.length">
+        <!-- <div v-if="comments && comments.length">
           <label>Comments:</label>
           <ul>
             <li v-for="(comment, index) in comments" :key="index">
@@ -35,7 +27,7 @@
             </li>
           </ul>
         </div>
-        <div v-else>No comments available</div>
+        <div v-else>No comments available</div> -->
       </div>
     </el-tab-pane>
 
@@ -43,22 +35,8 @@
       <div>
         <el-text class="mx-1">请点击视频下方分享视频中的嵌入代码然后将剪切板中的内容复制到此处:</el-text>
         <el-input v-model="inputCode" placeholder="Enter iframe code" />
-        <el-button color="#42b983" type="primary" plain @click="getAidCidBvid">获取全部弹幕</el-button>
-        <div>
-          <label>Extracted Aid:</label>
-          <div>{{ extractedAid }}</div>
-        </div>
-        <div>
-          <label>Extracted Cid:</label>
-          <div>{{ extractedCid }}</div>
-        </div>
-        <div>
-          <label>Extracted Bvid:</label>
-          <div>{{ extractedBvid }}</div>
-        </div>
-        <div v-if="responseData">
-          <pre>{{ responseData }}</pre>
-        </div>
+        <el-button color="#42b983" type="primary" plain @click="getAidCidBvid">获取全部弹幕信息</el-button>
+
       </div>
     </el-tab-pane>
   </el-tabs>
@@ -86,7 +64,6 @@ const extractedCid = ref("");
 const extractedBvid = ref("");
 const comments = ref("");
 const inputCode = ref("");
-const responseData = ref(null);
 
 const successMessage = ref('');
 const isSuccess = ref(null);
@@ -368,8 +345,6 @@ const fetchData = async (aid, cid, bvid) => {
     })
       .then(response => response.text())
       .then(message => {
-        console.log(message)
-        // 发送消息到前端
         // 解析消息内容并提取成功信息
         const data = JSON.parse(message);
         if (data) {
