@@ -1,4 +1,5 @@
 <template>
+    <h4>主题分析方法选择：</h4>
     <div style="margin-top: 20px">
         <el-radio-group v-model="radio1" size="small" @change="fetchTopicAnalysis">
             <el-radio :label="'1'" border>LDA</el-radio>
@@ -7,7 +8,7 @@
         </el-radio-group>
     </div>
 
-    <div v-loading="loading" style="margin-top: 30px;"></div>
+    <div v-loading="loading" style="margin-top: 50px;"></div>
     <div class="flex gap-2 mt-4">
         <div v-for="(topic, index) in topics" :key="index">
             <el-tag v-for="(word, i) in topic" :key="i" :type="getTagType(index)" effect="light" round>
@@ -64,6 +65,16 @@ const getTagType = (i) => {
 </script>
 
 <style>
+
+h4 {
+    color: #42b983;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    font-weight: 200;
+    line-height: 1.2rem;
+    margin: 2rem auto;
+}
+
 .el-radio.is-bordered.is-checked {
     border-color: #42b983 !important;
 }

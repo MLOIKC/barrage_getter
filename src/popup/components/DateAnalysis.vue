@@ -1,6 +1,8 @@
 <template>
     <div>
-        <el-button color="#42b983" type="primary" plain @click="DateAnalysis">生成发布时间密度图</el-button>
+        <h4>弹幕发布时间密度图</h4>
+        <div v-loading="loading" style="margin-top: 50px;"></div>
+        <!-- <el-button color="#42b983" type="primary" plain @click="DateAnalysis">生成发布时间密度图</el-button> -->
         <DateChart :dateData="dateResult" />
     </div>
 </template>
@@ -16,6 +18,11 @@ const store = useStore();
 const danmuDetail = computed(() => store.state.danmuDetail);
 
 const dateResult = ref('');
+const loading = ref(false);
+
+onMounted(() => {
+    DateAnalysis()
+})
 
 const isTimestamp = (value) => {
     return /^\d{10,13}$/.test(value);
@@ -60,6 +67,7 @@ const convertDatesToTimestamps = (datesArray) => {
 
 
 const DateAnalysis = () => {
+    loading.value = true;
     // 发送POST请求给Flask后端
     fetch('http://localhost:5000/analyze_date', {
         method: 'POST',
@@ -76,7 +84,7 @@ const DateAnalysis = () => {
         .then(response => response.json())
         .then(data => {
             dateResult.value = convertDatesToTimestamps(data);
-
+            loading.value = false;
         })
         .catch(error => {
             console.error('Error:', error);
@@ -93,6 +101,10 @@ h4 {
     font-weight: 200;
     line-height: 1.2rem;
     margin: 2rem auto;
+}
+
+.el-loading-spinner .path {
+    stroke: #42b983 !important;
 }
 </style>
   

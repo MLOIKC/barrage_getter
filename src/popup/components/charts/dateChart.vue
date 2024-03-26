@@ -126,7 +126,7 @@ const createDateChart = (dateData) => {
         .attr('x', width / 2)
         .attr('y', height - margin.bottom / 2 + 15)
         .attr('text-anchor', 'middle')
-        .text('Time (seconds)');
+        .text('Time');
 
     svg.append('text')
         .attr('transform', 'rotate(-90)')

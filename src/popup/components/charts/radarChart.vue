@@ -3,11 +3,6 @@
   <div :id="props.chartId + 'tooltip'"
     style="position: absolute; visibility: hidden; padding: 10px; background: white; border: 1px solid #42b983;border-radius: 8px;">
   </div>
-  <div>
-    <p>Categories: {{ props.categories }}</p>
-    <p>Counts: {{ props.counts }}</p>
-    <p>ChartId: {{ props.chartId }}</p>
-  </div>
 </template>
 
 <script setup>

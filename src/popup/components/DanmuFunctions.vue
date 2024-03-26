@@ -1,4 +1,33 @@
 <template>
+  <div class="danmudetail">
+    <div v-if="danmuDetail.type === 'Beg'">
+      <span style="color: black;">当前已使用的方法为：</span>
+      <span style="color: #42b983;">初级版</span>
+    </div>
+    <div v-else-if="danmuDetail.type === 'Int'">
+      <span style="color: black;">当前已使用的方法为：</span>
+      <span style="color: #42b983;">中级版</span>
+    </div>
+    <div v-else-if="danmuDetail.type === 'Adv'">
+      <span style="color: black;">当前已使用的方法为：</span>
+      <span style="color: #42b983;">高级版</span>
+    </div>
+  </div>
+  <div class="danmudetail">
+    <div v-if="danmuDetail.type === 'Beg'">
+      <span style="color: black;">当前获取的视频标题为：</span>
+      <span style="color: #42b983;">{{ danmuDetail.data }}</span>
+    </div>
+    <div v-else-if="danmuDetail.type === 'Int'">
+      <span style="color: black;">当前获取的视频BV号为：</span>
+      <span style="color: #42b983;">{{ danmuDetail.data }}</span>
+    </div>
+    <div v-else-if="danmuDetail.type === 'Adv'">
+      <span style="color: black;">当前获取的视频BV号为：</span>
+      <span style="color: #42b983;">{{ danmuDetail.data }}</span>
+    </div>
+  </div>
+
   <el-tabs v-model="activeName" class="danmutabs" @tab-click="handleTabClick">
     <el-tab-pane label="初级版" name="first">
       <el-button color="#42b983" type="primary" plain @click="getDanmuData">获取弹幕列表信息</el-button>
@@ -49,13 +78,31 @@
 </template>
 
 <script setup lang="js">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 // 导入 Element UI 的按钮组件
 import { ElButton } from 'element-plus';
 import { useStore } from 'vuex';
 
 const store = useStore();
+
+// 使用 ref 来创建响应式变量，并从 localStorage 中获取初始值
+const localdanmuDetail = ref(localStorage.getItem('danmuDetail') || '');
+
+// 使用 computed 创建计算属性，保持与 store.state.danmuDetail 的同步
 const danmuDetail = computed(() => store.state.danmuDetail);
+
+// 在组件加载时将 localStorage 中的值同步到 danmuDetail 变量中
+onMounted(() => {
+  if (localdanmuDetail.value) {
+    const parsedValue = JSON.parse(localdanmuDetail.value);
+    store.commit('setDanmuDetail', { type: parsedValue.type, data: parsedValue.data });
+  }
+});
+
+// 监听 danmuDetail 变量的变化，更新 localStorage 中的值
+watch(store.state.danmuDetail, (newValue) => {
+  localStorage.setItem('danmuDetail', JSON.stringify(newValue));
+});
 
 const activeName = ref('first')
 const iframeCode = ref("");
@@ -404,5 +451,13 @@ a {
 
 .el-tabs__active-bar {
   background-color: #42b983 !important;
+}
+
+.danmudetail {
+  color: #42b983;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 200;
+  text-align: left;
 }
 </style>

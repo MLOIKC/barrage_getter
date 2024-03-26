@@ -150,6 +150,9 @@ const createColorChart = (colorData) => {
         .attr('class', 'legend-text')
         .text(d => `: ${d.count}`);
 
+    // 根据 d.count 降序排列
+    legend.sort((a, b) => b.count - a.count);
+
     // 设置图例颜色块和文本并排显示
     legend.style('display', 'flex')
         .style('align-items', 'center'); // 垂直居中对齐
@@ -176,7 +179,7 @@ watch(() => props.colorData, (newColorData, oldColorData) => {
 .legend-color {
     width: 20px;
     height: 20px;
-    margin-right: 5px;
+    margin-right: 0px;
 }
 
 .legend-text {
