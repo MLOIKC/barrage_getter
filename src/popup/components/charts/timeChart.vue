@@ -1,6 +1,6 @@
 <template>
     <div>
-        <svg id="timeChart"></svg>
+        <div id="time"><svg id="timeChart"></svg></div>
         <div id="timeCharttooltip"
             style="position: absolute; visibility: hidden; padding: 5px; background: white; border: 1px solid #42b983;border-radius: 8px;">
         </div>
@@ -29,6 +29,13 @@ const createTimeChart = (timeData) => {
     const width = 300;
     const height = 270;
     const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+
+    // 移除旧的SVG如果存在，确保重绘而不是在旧图上绘制
+    d3.select("#timeChart").remove();
+    // 添加新的 svg 元素，设置 id 为 timeChart
+    const newDiv = d3.select("#time")
+        .append("svg")
+        .attr("id", "timeChart");
 
     const svg = d3.select("#timeChart")
         .attr('width', width)

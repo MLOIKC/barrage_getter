@@ -1,6 +1,6 @@
 <template>
     <div>
-        <svg id="dateChart"></svg>
+        <div id="date"><svg id="dateChart"></svg></div>
         <div id="dateCharttooltip"
             style="position: absolute; visibility: hidden; padding: 5px; background: white; border: 1px solid #42b983;border-radius: 8px;">
         </div>
@@ -30,6 +30,13 @@ const createDateChart = (dateData) => {
     const width = 300;
     const height = 270;
     const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+
+    // 移除旧的SVG如果存在，确保重绘而不是在旧图上绘制
+    d3.select("#dateChart").remove();
+    // 添加新的 svg 元素，设置 id 为 dateChart
+    const newDiv = d3.select("#date")
+        .append("svg")
+        .attr("id", "dateChart");
 
     const svg = d3.select("#dateChart")
         .attr('width', width)

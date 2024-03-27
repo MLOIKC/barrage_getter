@@ -1,5 +1,5 @@
 <template>
-    <div style="position: relative;">
+    <div style="position: relative;" id="color">
         <svg id="colorpieChartSvg"></svg>
         <div id="colorpieLegend"></div>
     </div>
@@ -30,6 +30,13 @@ const createColorChart = (colorData) => {
     const height = 270;
     const radius = Math.min(width, height) / 2 - 20;
 
+    // 移除旧的SVG如果存在，确保重绘而不是在旧图上绘制
+    d3.select("#colorpieChartSvg").remove();
+    // 添加新的 svg 元素，设置 id 为 colorpieChartSvg
+    const newSvg = d3.select("#color")
+        .append("svg")
+        .attr("id", "colorpieChartSvg");
+    
     const svg = d3.select('#colorpieChartSvg')
         .attr('width', width)
         .attr('height', height)
@@ -125,6 +132,14 @@ const createColorChart = (colorData) => {
         .attr('text-anchor', 'middle')
         .text(d => `${(d.data.count / total * 100).toFixed(2)}%`); // 显示百分比
 
+
+    // 移除旧的DIV如果存在，确保重绘而不是在旧图上绘制
+    d3.select("#colorpieLegend").remove();
+    // 添加新的 div 元素，设置 id 为 colorpieChartSvg
+    const newDiv = d3.select("#color")
+        .append("div")
+        .attr("id", "colorpieLegend");
+    
     // 图例
     const legend = d3.select('#colorpieLegend')
         .selectAll('.legend-item')

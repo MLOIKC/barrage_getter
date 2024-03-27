@@ -1,32 +1,5 @@
 <template>
-  <div class="danmudetail">
-    <div v-if="danmuDetail.type === 'Beg'">
-      <span style="color: black;">当前已使用的方法为：</span>
-      <span style="color: #42b983;">初级版</span>
-    </div>
-    <div v-else-if="danmuDetail.type === 'Int'">
-      <span style="color: black;">当前已使用的方法为：</span>
-      <span style="color: #42b983;">中级版</span>
-    </div>
-    <div v-else-if="danmuDetail.type === 'Adv'">
-      <span style="color: black;">当前已使用的方法为：</span>
-      <span style="color: #42b983;">高级版</span>
-    </div>
-  </div>
-  <div class="danmudetail">
-    <div v-if="danmuDetail.type === 'Beg'">
-      <span style="color: black;">当前获取的视频标题为：</span>
-      <span style="color: #42b983;">{{ danmuDetail.data }}</span>
-    </div>
-    <div v-else-if="danmuDetail.type === 'Int'">
-      <span style="color: black;">当前获取的视频BV号为：</span>
-      <span style="color: #42b983;">{{ danmuDetail.data }}</span>
-    </div>
-    <div v-else-if="danmuDetail.type === 'Adv'">
-      <span style="color: black;">当前获取的视频BV号为：</span>
-      <span style="color: #42b983;">{{ danmuDetail.data }}</span>
-    </div>
-  </div>
+  <BasicInfo />
 
   <el-tabs v-model="activeName" class="danmutabs" @tab-click="handleTabClick">
     <el-tab-pane label="初级版" name="first">
@@ -38,25 +11,7 @@
         <el-text class="mx-1">请点击视频下方分享视频中的嵌入代码然后将剪切板中的内容复制到此处:</el-text>
         <el-input v-model="iframeCode" placeholder="Enter iframe code" />
         <el-button color="#42b983" type="primary" plain @click="getCidBvid">获取详细弹幕信息</el-button>
-        <!-- <div v-if="comments && comments.length">
-          <label>Comments:</label>
-          <ul>
-            <li v-for="(comment, index) in comments" :key="index">
-              <div>
-                <strong>Content:</strong> {{ comment.content }}<br>
-                <strong>Time:</strong> {{ comment.time }} seconds<br>
-                <strong>Mode:</strong> {{ comment.mode }}<br>
-                <strong>Font Size:</strong> {{ comment.fontSize }}<br>
-                <strong>Color:</strong> {{ comment.color }}<br>
-                <strong>Timestamp:</strong> {{ comment.timestamp }}<br>
-                <strong>Pool:</strong> {{ comment.pool }}<br>
-                <strong>Sender ID:</strong> {{ comment.senderId }}<br>
-                <strong>Row ID:</strong> {{ comment.rowId }}
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div v-else>No comments available</div> -->
+
       </div>
     </el-tab-pane>
 
@@ -70,6 +25,10 @@
     </el-tab-pane>
   </el-tabs>
   <div>
+    <el-alert v-if="isMatched === false" title="获取Cid/Aid失败，请输入正确的iframe" type="error" center :closable="false" show-icon
+      style="margin-top: 10px;" />
+    <el-alert v-else-if="isMatched === true" title="获取Cid/Aid成功" type="success" center :closable="false" show-icon
+      style="margin-top: 10px;" />
     <el-alert v-if="isSuccess === true" :title="successMessage" type="success" center :closable="false" show-icon
       style="margin-top: 10px;" />
     <el-alert v-else-if="isSuccess === false" :title="successMessage" type="error" center :closable="false" show-icon
@@ -82,6 +41,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 // 导入 Element UI 的按钮组件
 import { ElButton } from 'element-plus';
 import { useStore } from 'vuex';
+import BasicInfo from './BasicInfo.vue'
 
 const store = useStore();
 
@@ -114,6 +74,7 @@ const inputCode = ref("");
 
 const successMessage = ref('');
 const isSuccess = ref(null);
+const isMatched = ref(null);
 
 // 监听来自 background.js 的消息
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -135,6 +96,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 const handleTabClick = (tab) => {
   isSuccess.value = null;
+  isMatched.value = null;
 }
 
 // 初级版获取弹幕
@@ -148,7 +110,7 @@ const getDanmuData = () => {
       function: () => {
         // 获取视频标题数据
         let danmuTitle = "hello";
-        const danmuTitleElement = document.querySelector('#viewbox_report > h1');
+        const danmuTitleElement = document.querySelector('#viewbox_report > div.video-info-title > div > h1');
 
         if (danmuTitleElement) {
           danmuTitle = danmuTitleElement.innerText;
@@ -264,6 +226,7 @@ const getCidBvid = () => {
   const match_bvid = iframeCode.value.match(regex_bvid);
 
   if (match_cid && match_cid[1] && match_bvid && match_bvid[1]) {
+    isMatched.value = true;
     extractedCid.value = match_cid[1];
     console.log("Extracted Cid:", match_cid[1]);
 
@@ -275,6 +238,7 @@ const getCidBvid = () => {
     // 根据提取到的 cid 获取评论内容
     fetchComments(match_cid[1], match_bvid[1]);
   } else {
+    isMatched.value = false;
     console.error("Unable to extract Cid from iframe code");
   }
 };
@@ -295,7 +259,7 @@ const fetchComments = async (cid, bvid) => {
     comments.value = Array.from(commentNodes).map((node) => {
       return {
         content: node.textContent,
-        time: parseFloat(node.getAttribute('p').split(',')[0]), // 解析时间参数
+        time: parseFloat(node.getAttribute('p').split(',')[0]),
         mode: parseInt(node.getAttribute('p').split(',')[1]),
         fontSize: parseInt(node.getAttribute('p').split(',')[2]),
         color: parseInt(node.getAttribute('p').split(',')[3]),
@@ -356,6 +320,7 @@ const getAidCidBvid = () => {
   const match_bvid = inputCode.value.match(regex_bvid);
 
   if (match_aid && match_aid[1] && match_cid && match_cid[1] && match_bvid && match_bvid[1]) {
+    isMatched.value = true;
     extractedAid.value = match_aid[1];
     console.log("Extracted Aid:", match_aid[1]);
 
@@ -369,6 +334,7 @@ const getAidCidBvid = () => {
     // 根据提取到的 cid 获取评论内容
     fetchData(match_aid[1], match_cid[1], match_bvid[1]);
   } else {
+    isMatched.value = false;
     console.error("Unable to extract Cid from iframe code");
   }
 };
@@ -458,6 +424,6 @@ a {
   text-transform: uppercase;
   font-size: 0.8rem;
   font-weight: 200;
-  text-align: left;
+  text-align: center;
 }
 </style>
