@@ -48,6 +48,11 @@ const routes = [
     name: 'colorAnalysis',
     component: () => import('../components/ColorAnalysis.vue'),
   },
+  {
+    path: '/useranalysis',
+    name: 'userAnalysis',
+    component: () => import('../components/UserAnalysis.vue'),
+  },
 ];
 
 const router = createRouter({

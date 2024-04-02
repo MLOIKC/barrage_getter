@@ -176,7 +176,7 @@ const createColorChart = (colorData) => {
     d3.select('#colorpieLegend')
         .style('position', 'absolute')
         .style('top', '10px') // 距离顶部 10px
-        .style('right', '-20px'); // 距离右侧 10px
+        .style('right', '-40px'); // 距离右侧 10px
 
 }
 

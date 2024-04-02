@@ -12,7 +12,10 @@
             </el-icon>
             <span>弹幕获取</span>
         </el-menu-item>
-
+        <el-alert v-if="showAlert" title="请先获取弹幕数据！" type="warning" :closable="false" show-icon>
+            </el-alert>
+            <el-alert v-if="showColorUserAlert" title="初级版不支持色彩分析和用户分析！" type="warning" :closable="false" show-icon>
+            </el-alert>
         <el-sub-menu index="2">
             <template #title>
                 <el-icon>
@@ -20,19 +23,15 @@
                 </el-icon>
                 <span>弹幕综合分析</span>
             </template>
-            <el-alert v-if="showAlert" title="请先获取弹幕数据！" type="warning" :closable="false" show-icon>
-            </el-alert>
-            <el-alert v-if="showColorAlert" title="初级版不支持色彩分析！" type="warning" :closable="false" show-icon>
-            </el-alert>
             <el-menu-item index="2-1" @click="navigateToSentiAnalysis">弹幕情感分析</el-menu-item>
             <el-menu-item index="2-2" @click="navigateToThemeAnalysis">弹幕主题分析</el-menu-item>
-            <el-menu-item index="2-3" @click="navigateToKeywordsAnalysis">弹幕关键词提取</el-menu-item>
-            <el-menu-item index="2-4" @click="navigateToTimeAnalysis">弹幕时间密度</el-menu-item>
+            <el-menu-item index="2-3" @click="navigateToKeywordsAnalysis">弹幕关键词分析</el-menu-item>
+            <el-menu-item index="2-4" @click="navigateToTimeAnalysis">弹幕时间密度分析</el-menu-item>
             <el-menu-item index="2-5" @click="navigateToColorAnalysis">弹幕色彩分析</el-menu-item>
-            <el-menu-item index="2-6" @click="navigateToDateAnalysis">弹幕发布时间统计</el-menu-item>
+            <el-menu-item index="2-6" @click="navigateToDateAnalysis">弹幕发布时间密度分析</el-menu-item>
 
         </el-sub-menu>
-        <el-menu-item index="3">
+        <el-menu-item index="3" @click="navigateToGetuser">
             <el-icon>
                 <User />
             </el-icon>
@@ -57,7 +56,7 @@ const router = useRouter();
 
 const danmuDetail = computed(() => store.state.danmuDetail);
 const showAlert = ref(false); // 控制警告显示的变量
-const showColorAlert = ref(false);
+const showColorUserAlert = ref(false);
 
 const navigateToWelcome = () => {
     router.push('/welcome');
@@ -73,7 +72,7 @@ const navigateToSentiAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/sentiAnalysis');
         showAlert.value = false;
-        showColorAlert.value = false;
+        showColorUserAlert.value = false;
     }
 };
 const navigateToThemeAnalysis = () => {
@@ -84,7 +83,7 @@ const navigateToThemeAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/themeanalysis');
         showAlert.value = false;
-        showColorAlert.value = false;
+        showColorUserAlert.value = false;
     }
 };
 const navigateToKeywordsAnalysis = () => {
@@ -95,7 +94,7 @@ const navigateToKeywordsAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/keywordsanalysis');
         showAlert.value = false;
-        showColorAlert.value = false;
+        showColorUserAlert.value = false;
     }
 };
 const navigateToTimeAnalysis = () => {
@@ -106,7 +105,7 @@ const navigateToTimeAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/timeanalysis');
         showAlert.value = false;
-        showColorAlert.value = false;
+        showColorUserAlert.value = false;
     }
 };
 const navigateToDateAnalysis = () => {
@@ -117,7 +116,7 @@ const navigateToDateAnalysis = () => {
         // 如果不为空，进行页面跳转
         router.push('/dateanalysis');
         showAlert.value = false;
-        showColorAlert.value = false;
+        showColorUserAlert.value = false;
     }
 };
 const navigateToColorAnalysis = () => {
@@ -127,12 +126,28 @@ const navigateToColorAnalysis = () => {
     } else {
         // 如果不为空
         if (danmuDetail.value.type == 'Beg') {
-            showColorAlert.value = true;
+            showColorUserAlert.value = true;
         }
         else {
             router.push('/coloranalysis');
             showAlert.value = false;
-            showColorAlert.value = false;
+            showColorUserAlert.value = false;
+        }
+    }
+};
+const navigateToGetuser = () => {
+    if (!danmuDetail.value.type) {
+        // 如果 danmuDetail 为空，提醒用户
+        showAlert.value = true;
+    } else {
+        // 如果不为空
+        if (danmuDetail.value.type == 'Beg') {
+            showColorUserAlert.value = true;
+        }
+        else {
+            router.push('/useranalysis');
+            showAlert.value = false;
+            showColorUserAlert.value = false;
         }
     }
 };

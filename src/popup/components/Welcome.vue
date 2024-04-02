@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import ColorPieChart from './charts/colorPieChart.vue';
+import ColorPieChart from './charts/lineChart.vue';
 </script>
 <style>
 main {
@@ -21,7 +21,7 @@ h4 {
     color: #42b983;
     text-transform: uppercase;
     font-size: 1.4rem;
-    font-weight: 200;
+    font-weight: 400;
     line-height: 1.2rem;
     margin: 2rem auto;
 }

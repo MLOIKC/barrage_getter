@@ -182,7 +182,7 @@ h4 {
     font-size: 1.4rem;
     font-weight: 200;
     line-height: 1.2rem;
-    margin: 2rem auto;
+    margin: 1rem auto;
 }
 
 .el-loading-spinner .path {

@@ -27,7 +27,7 @@ const createTimeChart = (timeData) => {
 
     // 设置SVG尺寸
     const width = 300;
-    const height = 270;
+    const height = 280;
     const margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
     // 移除旧的SVG如果存在，确保重绘而不是在旧图上绘制

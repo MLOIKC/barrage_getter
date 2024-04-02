@@ -14,9 +14,8 @@
             </el-tab-pane>
         </el-tabs>
         <h4>弹幕分布时间密度图</h4>
-        <div v-loading="loading" style="margin-top: 50px;"></div>
-        <!-- <el-button color="#42b983" type="primary" plain @click="TimeAnalysis">生成时间密度图</el-button> -->
         <TimeChart :timeData="timeResult" />
+        <div v-loading="loading" style="margin-top: 50px;"></div>
     </div>
 </template>
 
@@ -127,7 +126,7 @@ h4 {
     font-size: 1.4rem;
     font-weight: 200;
     line-height: 1.2rem;
-    margin: 2rem auto;
+    margin: 1rem auto;
 }
 
 .el-loading-spinner .path {

@@ -4,8 +4,8 @@
         <el-tabs type="card" stretch style="margin-top: 10px;" v-model="activeTab" @tab-click="handleTabClick">
             <el-tab-pane label="当前分析" name="current-analysis"></el-tab-pane>
             <el-tab-pane label="历史分析" name="history-analysis">
-                <el-select v-model="selectValue" placeholder="请选择要查看的历史信息" size="small" style="width: 240px;"
-                    @click="getKeywordsAnalysisHistory">
+                <el-select v-model="selectValue" placeholder="请选择要查看的历史信息" size="small" style="width: 240px"
+                    @click="getUserAnalysisHistory">
                     <el-option-group label="视频标识 - 分析时间">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.label"
                             @click.native="handleOptionClick(item.value)" />
@@ -13,8 +13,14 @@
                 </el-select>
             </el-tab-pane>
         </el-tabs>
-        <h4>弹幕关键词词云</h4>
-        <KeywordsChart :wordData="keywordsResult" />
+        <div class="userdetail">
+            共有<span class="green-text">{{ UserResult.num_users }}</span>名用户发送了弹幕<br>
+            所有用户发布弹幕平均次数: <span class="green-text">{{ UserResult.total_avg_frequency }}</span><br>
+            所有用户发布弹幕平均长度:<span class="green-text">{{ UserResult.total_avg_length }}</span><br>
+            活跃用户数(发送弹幕数>=5): <span class="green-text">{{ UserResult.active_user }}</span>
+        </div>
+        <h4>用户活跃时间段分布图</h4>
+        <LineChart :userDataHours="UserResult.hours" :userDataCounts="UserResult.counts" />
         <div v-loading="loading" style="margin-top: 50px;"></div>
     </div>
 </template>
@@ -23,24 +29,24 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ElButton } from 'element-plus';
 import { useStore } from 'vuex';
-import KeywordsChart from './charts/wordcloudChart.vue';
+import LineChart from './charts/lineChart.vue';
 import BasicInfo from './BasicInfo.vue'
 
 const store = useStore();
 
 const danmuDetail = computed(() => store.state.danmuDetail);
 
-const keywordsResult = ref('');
+const UserResult = ref('');
 const loading = ref(false);
 
 onMounted(() => {
-    KeywordsAnalysis()
+    UserAnalysis()
 })
 
-const KeywordsAnalysis = () => {
+const UserAnalysis = () => {
     loading.value = true;
-    // 发送POST请求给Flask后端进行情感分析
-    fetch('http://localhost:5000/analyze_keywords', {
+    // 发送POST请求给Flask后端
+    fetch('http://localhost:5000/analyze_user', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -54,8 +60,7 @@ const KeywordsAnalysis = () => {
     })
         .then(response => response.json())
         .then(data => {
-            // 获取情感分析结果并更新到前端页面
-            keywordsResult.value = data;
+            UserResult.value = data;
             loading.value = false;
         })
         .catch(error => {
@@ -66,9 +71,9 @@ const KeywordsAnalysis = () => {
 const selectValue = ref(''); // 选择器的值
 const options = ref([]); // 选项列表
 
-// 获取关键词分析历史数据
-const getKeywordsAnalysisHistory = () => {
-    fetch('http://localhost:5000/get_keywords_analysis_history', {
+// 获取时间分析历史数据
+const getUserAnalysisHistory = () => {
+    fetch('http://localhost:5000/get_user_analysis_history', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -83,7 +88,7 @@ const getKeywordsAnalysisHistory = () => {
         .then(response => response.json())
         .then(data => {
             options.value = data.history_data.map(item => ({
-                value: item.word_data,
+                value: item.user_data,
                 label: `${item.danmu_data} - ${formatTimestamp(item.analysis_timestamp)}`,
             }));
         })
@@ -104,7 +109,7 @@ const formatTimestamp = (timestamp) => {
 };
 
 const handleOptionClick = (value) => {
-    keywordsResult.value = value;
+    UserResult.value = value;
 }
 const activeTab = ref('current-analysis'); // 默认选中当前分析标签页
 
@@ -112,7 +117,7 @@ const handleTabClick = (tab) => {
     if (tab.props.name === 'current-analysis') {
         // 切换到当前分析标签页的操作
         console.log('切换到当前分析标签页');
-        KeywordsAnalysis()
+        UserAnalysis()
     } else if (tab.props.name === 'history-analysis') {
         // 切换到历史分析标签页的操作
         console.log('切换到历史分析标签页');
@@ -148,6 +153,20 @@ h4 {
 
 .el-select-dropdown__item {
     font-size: 12px !important;
+}
+
+.userdetail {
+    color: black;
+    text-transform: uppercase;
+    font-size: 1.0rem;
+    font-weight: 200;
+    text-align: center;
+}
+
+.green-text {
+    color: #42b983;
+    font-size: 1.6rem;
+    font-weight: 400;
 }
 </style>
   

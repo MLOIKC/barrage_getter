@@ -1,28 +1,36 @@
 <template>
   <BasicInfo />
 
-  <el-tabs v-model="activeName" class="danmutabs" @tab-click="handleTabClick">
+  <el-tabs stretch v-model="activeName" class="danmutabs" @tab-click="handleTabClick">
     <el-tab-pane label="初级版" name="first">
       <el-button color="#42b983" type="primary" plain @click="getDanmuData">获取弹幕列表信息</el-button>
     </el-tab-pane>
 
-    <el-tab-pane label="中级版" name="second">
+    <!-- <el-tab-pane label="中级版" name="second">
       <div>
-        <el-text class="mx-1">请点击视频下方分享视频中的嵌入代码然后将剪切板中的内容复制到此处:</el-text>
-        <el-input v-model="iframeCode" placeholder="Enter iframe code" />
+        <ul class="step-list">
+          <li><span class="step-icon">1</span> 点击视频下方的分享视频<img :src="shareImage" alt="Share" width="22" /></li>
+          <li><span class="step-icon">2</span> 点击其中的嵌入代码<img :src="iframeImage" alt="Iframe" width="40" /></li>
+          <li><span class="step-icon">3</span> 将复制的内容粘贴到此处</li>
+        </ul>
+        <el-input v-model="iframeCode" placeholder="Enter iframe code" style="margin-bottom: 10px;" />
         <el-button color="#42b983" type="primary" plain @click="getCidBvid">获取详细弹幕信息</el-button>
 
       </div>
-    </el-tab-pane>
+    </el-tab-pane> -->
 
     <el-tab-pane label="高级版" name="third">
       <div>
-        <el-text class="mx-1">请点击视频下方分享视频中的嵌入代码然后将剪切板中的内容复制到此处:</el-text>
-        <el-input v-model="inputCode" placeholder="Enter iframe code" />
-        <el-button color="#42b983" type="primary" plain @click="getAidCidBvid">获取全部弹幕信息</el-button>
-
+        <ul class="step-list">
+          <li><span class="step-icon">1</span> 点击视频下方的分享视频<img :src="shareImage" alt="Share" width="22" /></li>
+          <li><span class="step-icon">2</span> 点击其中的嵌入代码<img :src="iframeImage" alt="Iframe" width="40" /></li>
+          <li><span class="step-icon">3</span> 将复制的内容粘贴到此处</li>
+        </ul>
+        <el-input v-model="inputCode" placeholder="Enter iframe code" style="margin-bottom: 10px;" />
+        <el-button color="#42b983" type="primary" plain @click="getAidCidBvid">获取详细弹幕信息</el-button>
       </div>
     </el-tab-pane>
+
   </el-tabs>
   <div>
     <el-alert v-if="isMatched === false" title="获取Cid/Aid失败，请输入正确的iframe" type="error" center :closable="false" show-icon
@@ -42,6 +50,8 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { ElButton } from 'element-plus';
 import { useStore } from 'vuex';
 import BasicInfo from './BasicInfo.vue'
+import shareImage from '../../assets/share.jpg';
+import iframeImage from '../../assets/iframe.jpg';
 
 const store = useStore();
 
@@ -381,19 +391,15 @@ const fetchData = async (aid, cid, bvid) => {
 
 <style>
 h3 {
-  color: #42b983;
+  background: linear-gradient(to left, #42b983, #9bf1ca);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-transform: uppercase;
-  font-size: 1.8rem;
-  font-weight: 200;
-  line-height: 1.2rem;
+  font-size: 2.2rem;
+  font-weight: 1000;
   margin: 2rem auto;
-}
-
-a {
-  font-size: 0.5rem;
-  margin: 0.5rem;
-  color: #cccccc;
-  text-decoration: none;
+  filter: drop-shadow(1.5px 1.5px 0px rgba(0, 0, 0, 0.6));
+  font-family: 'STXinwei';
 }
 
 .el-input {
@@ -425,5 +431,31 @@ a {
   font-size: 0.8rem;
   font-weight: 200;
   text-align: center;
+}
+
+.step-list {
+  list-style: none;
+  padding-left: 0;
+  text-align: center;
+}
+
+.step-list li {
+  list-style: none;
+  margin-bottom: 1rem;
+  /* 设置列表项之间的间距 */
+  font-size: 13px;
+}
+
+.step-icon {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  line-height: 1.0rem;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #4ac28c;
+  color: #fff;
+  font-weight: bold;
+  margin-right: 0.2rem;
 }
 </style>
